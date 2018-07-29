@@ -3,6 +3,7 @@ package com.oocl.jpaPractice.oneToOne.repository;
 import com.oocl.jpaPractice.oneToOne.entity.Klass;
 import com.oocl.jpaPractice.oneToOne.entity.Leader;
 import org.hamcrest.core.IsEqual;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,6 +48,11 @@ public class KlassRepositoryTest {
         klassList.add(klass1);
         klassList.add(klass2);
         klassList.add(klass3);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        this.manager.clear();
     }
 
     @Test

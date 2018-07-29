@@ -20,6 +20,10 @@ public class Company {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "company", fetch = FetchType.LAZY)
     private List<Employee> employees;
 
+    public Company(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }
