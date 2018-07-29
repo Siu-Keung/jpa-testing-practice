@@ -45,6 +45,48 @@ public class CompanyRepositoryTest {
         assertThat(companies.get(1).getName(), is("公司二"));
     }
 
+    @Test
+    public void should_save_company_successfully(){
+        Company company = new Company("公司1");
+
+        Company result = this.repository.save(company);
+
+        assertThat(this.repository.findAll().size(), is(1));
+        assertThat(this.manager.find(Company.class, result.getId()), notNullValue());
+    }
+
+    @Test
+    public void should_get_company_by_id(){
+        Company company1 = manager.persistFlushFind(new Company("公司1"));
+
+        Optional<Company> optional = this.repository.findById(company1.getId());
+
+        assertThat(optional.isPresent(), is(true));
+        assertThat(optional.get(), is(company1));
+    }
+
+    @Test
+    public void should_not_get_company_given_invalid_id(){
+        Optional<Company> optional = repository.findById(99999L);
+
+        assertThat(optional.isPresent(), is(false));
+    }
+
+    @Test
+    public void should_get_true_when_given_id_exists(){
+        Company company = this.manager.persistFlushFind(new Company("公司1"));
+
+        boolean existed = this.repository.existsById(company.getId());
+
+        assertThat(existed, is(true));
+    }
+
+    @Test
+    public void should_get_false_when_given_id_not_exists() {
+        boolean existed = this.repository.existsById(999999L);
+
+        assertThat(existed, is(false));
+    }
 
 
 }
