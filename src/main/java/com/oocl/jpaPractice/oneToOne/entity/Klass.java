@@ -18,6 +18,10 @@ public class Klass {
     @JoinColumn(name = "leader_id")
     private Leader leader;
 
+    public Klass(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }
