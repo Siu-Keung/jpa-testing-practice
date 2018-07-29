@@ -44,6 +44,13 @@ public class GroupRepositoryTest {
         assertThat(groups.get(1).getName(), is("group2"));
     }
 
+    @Test
+    public void should_save_group_successfully(){
+        Group group = this.repository.save(new Group("group1"));
+
+        assertThat(this.manger.find(Group.class, group.getId()).getName(), is(group.getName()));
+        assertThat(this.repository.findAll().size(), is(1));
+    }
 
 
 }
