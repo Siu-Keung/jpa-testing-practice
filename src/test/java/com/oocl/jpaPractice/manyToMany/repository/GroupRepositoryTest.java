@@ -72,4 +72,5 @@ public class GroupRepositoryTest {
         assertThat(this.repository.findAll().size(), is(1));
     }
 
+
 }
