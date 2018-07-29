@@ -88,5 +88,14 @@ public class CompanyRepositoryTest {
         assertThat(existed, is(false));
     }
 
+    @Test
+    public void should_remove_company_successfully(){
+        Company company = this.manager.persistFlushFind(new Company("公司1"));
+        assertThat(this.repository.findAll().size(), is(1));
+
+        this.repository.deleteById(company.getId());
+
+        assertThat(this.repository.findAll().size(), is(0));
+    }
 
 }
