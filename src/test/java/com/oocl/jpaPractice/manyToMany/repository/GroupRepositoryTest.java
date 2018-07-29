@@ -52,5 +52,24 @@ public class GroupRepositoryTest {
         assertThat(this.repository.findAll().size(), is(1));
     }
 
+    @Test
+    public void should_remove_group_successfully(){
+        Group group = this.manger.persistFlushFind(new Group("group1"));
+
+        this.repository.deleteById(group.getId());
+
+        assertThat(this.repository.findAll().size(), is(0));
+    }
+
+    @Test
+    public void should_remove_group_failed(){
+        this.manger.persistFlushFind(new Group("group1"));
+
+        try {
+            this.repository.deleteById(99999L);
+        }catch (Exception e){ }
+
+        assertThat(this.repository.findAll().size(), is(1));
+    }
 
 }
