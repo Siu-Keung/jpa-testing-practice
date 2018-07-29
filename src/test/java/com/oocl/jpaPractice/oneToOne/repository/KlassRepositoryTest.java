@@ -4,11 +4,14 @@ import com.oocl.jpaPractice.oneToOne.entity.Klass;
 import com.oocl.jpaPractice.oneToOne.entity.Leader;
 import org.hamcrest.core.IsEqual;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,9 @@ public class KlassRepositoryTest {
 
     @Autowired
     private TestEntityManager manager;
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     private List<Klass> klassList;
 
@@ -71,5 +77,31 @@ public class KlassRepositoryTest {
         assertThat(optional.get(), is(this.klassList.get(1)));
     }
 
+    @Test
+    public void should_not_get_klass_when_given_id_not_exist(){
+        Optional<Klass> optional = this.repository.findById(99999999L);
+
+        assertThat(optional.isPresent(), is(false));
+    }
+
+
+    @Test
+    public void should_remove_klass_successfully_given_valid_id(){
+        assertThat(this.repository.findAll().size(), is(3));
+
+        this.repository.deleteById(this.klassList.get(0).getId());
+
+        assertThat(this.repository.findAll().size(), is(2));
+        assertThat(this.manager.find(Klass.class, this.klassList.get(0).getId()), nullValue());
+    }
+
+    @Test
+    public void should_throw_exception_given_id_not_exists(){
+        Optional<Klass> optional = this.repository.findById(9999L);
+        assertThat(optional.isPresent(), is(false));
+
+        this.expectedException.expect(EmptyResultDataAccessException.class);
+        this.repository.deleteById(9999L);
+    }
 
 }
