@@ -12,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
@@ -28,11 +30,17 @@ public class KlassRepositoryTest {
     @Autowired
     private TestEntityManager manager;
 
+    private List<Klass> klassList;
+
     @Before
     public void init(){
-        this.manager.persistFlushFind(new Klass("一班"));
-        this.manager.persistFlushFind(new Klass("二班"));
-        this.manager.persistFlushFind(new Klass("三班"));
+        Klass klass1 = this.manager.persistFlushFind(new Klass("一班"));
+        Klass klass2 = this.manager.persistFlushFind(new Klass("二班"));
+        Klass klass3 = this.manager.persistFlushFind(new Klass("三班"));
+        this.klassList = new ArrayList<>();
+        klassList.add(klass1);
+        klassList.add(klass2);
+        klassList.add(klass3);
     }
 
     @Test
@@ -55,7 +63,13 @@ public class KlassRepositoryTest {
         assertThat(manager.find(Klass.class, result.getId()), is(result));
     }
 
+    @Test
+    public void should_get_specific_klass_by_id(){
+        Optional<Klass> optional = this.repository.findById(this.klassList.get(1).getId());
 
+        assertThat(optional.isPresent(), is(true));
+        assertThat(optional.get(), is(this.klassList.get(1)));
+    }
 
 
 }
